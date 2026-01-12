@@ -28,7 +28,7 @@ This service implements a very simple pricing logic:
 - Clone the repository:
 
  ```shell
-git clone git@github.com:jvjimenez/pricing.git
+git clone git@github.com:jvjimenez/pricing-service.git
 cd pricing
 ```
  
