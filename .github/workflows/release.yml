@@ -3,15 +3,15 @@ name: Release version
 on:
   pull_request:
     branches:
-      - main
+      - feature/versioning_fake_main
     types:
       - closed
 
 jobs:
   release:
     if: github.event.pull_request.merged == true &&
-      github.event.pull_request.base.ref == 'main' &&
-      github.event.pull_request.head.ref == 'develop'
+      github.event.pull_request.base.ref == 'feature/versioning_fake_main' &&
+      github.event.pull_request.head.ref == 'feature/versioning'
 
     runs-on: ubuntu-latest
 
@@ -58,5 +58,5 @@ jobs:
       - name: Create and push tag
         run: |
           git tag v${{ steps.release.outputs.release_version }}
-          git push origin main
+          git push origin feature/versioning_fake_main
           git push origin v${{ steps.release.outputs.release_version }}
