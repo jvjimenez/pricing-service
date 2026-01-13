@@ -47,8 +47,11 @@ Tests cover examples of domain logic, controller and dto mappings.
 ```shell
 mvn clean verify
 ```
+## Versioning 
 
-### Notes
+Included example workflow that build, test and tag a new version when a PR is merged into main.
+
+## Notes
 
 - As required, the service uses H2 in-memory for tests and initial data is loaded via data.sql.
 - All domain and API models use BigDecimal for prices and Instant (UTC) for dates to ensure precision.
