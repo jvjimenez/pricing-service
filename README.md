@@ -29,7 +29,7 @@ This service implements a very simple pricing logic:
 
  ```shell
 git clone git@github.com:jvjimenez/pricing-service.git
-cd pricing
+cd pricing-service
 ```
  
 - Build and run:
