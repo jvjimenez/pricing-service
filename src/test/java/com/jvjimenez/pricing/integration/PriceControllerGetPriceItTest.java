@@ -1,6 +1,6 @@
-package com.jvjimenez.pricing.infrastructure.it;
+package com.jvjimenez.pricing.integration;
 
-import com.jvjimenez.pricing.infrastructure.api.rest.model.PriceResponseDto;
+import com.jvjimenez.pricing.infrastructure.adapter.in.rest.dto.PriceResponseDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,11 +19,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PriceControllerGetPriceItTest extends BaseItTest {
 
-    @Autowired
-    private TestRestTemplate restTemplate;
-
     private static final long PRODUCT_ID = 35455L;
     private static final long BRAND_ID = 1L;
+    @Autowired
+    private TestRestTemplate restTemplate;
 
     public Stream<Arguments> shouldReturn200GetPrice() {
         return Stream.of(
@@ -44,7 +43,7 @@ class PriceControllerGetPriceItTest extends BaseItTest {
 
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getPrice()).isEqualByComparingTo(expectedPrice);
+        assertThat(response.getBody().price()).isEqualByComparingTo(expectedPrice);
     }
 
     @Test

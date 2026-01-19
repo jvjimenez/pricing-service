@@ -1,15 +1,15 @@
-package com.jvjimenez.pricing.domain.port.primary;
+package com.jvjimenez.pricing.application.view;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
-public record PriceResult(
+public record PriceSummary(
         Long brandId,
         Long productId,
         Instant startDate,
         Instant endDate,
         Long applicableRate,
         BigDecimal price,
-        String curr
+        String currency
 ) {
 }

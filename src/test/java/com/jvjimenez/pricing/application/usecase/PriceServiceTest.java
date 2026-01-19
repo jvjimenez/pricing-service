@@ -1,8 +1,9 @@
-package com.jvjimenez.pricing.domain.service;
+package com.jvjimenez.pricing.application.usecase;
 
+import com.jvjimenez.pricing.application.query.SearchPriceQuery;
+import com.jvjimenez.pricing.application.view.PriceSummary;
 import com.jvjimenez.pricing.domain.model.Price;
-import com.jvjimenez.pricing.domain.port.primary.PriceResult;
-import com.jvjimenez.pricing.domain.port.secondary.PricePersistenceService;
+import com.jvjimenez.pricing.domain.port.out.PricePersistencePort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,15 +14,15 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-class PriceServiceUnitTest {
+class PriceServiceTest {
 
-    private PricePersistenceService repository;
-    private PriceServiceImpl service;
+    private PricePersistencePort repository;
+    private GetPriceUseCaseImpl service;
 
     @BeforeEach
     void setup() {
-        repository = mock(PricePersistenceService.class);
-        service = new PriceServiceImpl(repository);
+        repository = mock(PricePersistencePort.class);
+        service = new GetPriceUseCaseImpl(repository);
     }
 
     @Test
@@ -29,7 +30,7 @@ class PriceServiceUnitTest {
         when(repository.findByBrandAndProductAndDate(anyLong(), anyLong(), any()))
                 .thenReturn(Optional.empty());
 
-        Optional<PriceResult> result = service.getPrice(1L, 1L, Instant.now());
+        Optional<PriceSummary> result = service.getPrice(new SearchPriceQuery(1L, 1L, Instant.now()));
 
         assertThat(result).isEmpty();
     }
@@ -37,12 +38,12 @@ class PriceServiceUnitTest {
     @Test
     void shouldReturnPriceWithinDateRange() {
         Instant now = Instant.parse("2020-06-14T16:00:00Z");
-        Price p1 = new Price(1L, 1L, Instant.parse("2020-06-14T15:00:00Z"),
+        Price p1 = new Price(1L, 35455L, Instant.parse("2020-06-14T15:00:00Z"),
                 Instant.parse("2020-06-14T18:30:00Z"), 1L, 2, new BigDecimal("25.45"), "EUR");
 
-        when(repository.findByBrandAndProductAndDate(35455L, 1L, now)).thenReturn(Optional.of(p1));
+        when(repository.findByBrandAndProductAndDate(1L, 35455L, now)).thenReturn(Optional.of(p1));
 
-        Optional<PriceResult> result = service.getPrice(35455L, 1L, now);
+        Optional<PriceSummary> result = service.getPrice(new SearchPriceQuery(1L, 35455L, now));
 
         assertThat(result).isPresent();
         assertThat(result.get().price()).isEqualByComparingTo(new BigDecimal("25.45"));

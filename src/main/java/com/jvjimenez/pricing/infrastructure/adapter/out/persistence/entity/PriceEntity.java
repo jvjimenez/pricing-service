@@ -1,17 +1,49 @@
-package com.jvjimenez.pricing.infrastructure.api.rest.model;
+package com.jvjimenez.pricing.infrastructure.adapter.out.persistence.entity;
+
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
-public class PriceResponseDto {
+@Entity
+@Table(name = "price")
+public class PriceEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private Long brandId;
+    @Column(nullable = false)
     private Long productId;
+
+    @Column(nullable = false)
+    private Long brandId;
+
+    @Column(nullable = false)
     private Long applicableRate;
+
+    @Column(nullable = false)
+    private Integer priority;
+
+    @Column(nullable = false)
     private Instant startDate;
+
+    @Column(nullable = false)
     private Instant endDate;
+
+    @Column(nullable = false)
     private BigDecimal price;
-    private String curr;
+
+    @Column(name = "curr", nullable = false)
+    private String currency;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getProductId() {
         return productId;
@@ -35,6 +67,14 @@ public class PriceResponseDto {
 
     public void setApplicableRate(Long applicableRate) {
         this.applicableRate = applicableRate;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
     }
 
     public Instant getStartDate() {
@@ -61,7 +101,11 @@ public class PriceResponseDto {
         this.price = price;
     }
 
-    public String getCurr() { return curr; }
+    public String getCurrency() {
+        return currency;
+    }
 
-    public void setCurr(String curr) { this.curr = curr; }
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 }
