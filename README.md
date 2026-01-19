@@ -1,61 +1,184 @@
-# pricing-service
+# Product prices service
 
+## Table of Contents
 
-This technical test is a Spring Boot microservice with hexagonal architecture that provides product pricing information via a REST API.
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Features](#features)
+- [Configuration](#configuration)
+- [Database Schema](#database-schema)
+- [API Documentation](#api-documentation)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Running the Service](#running-the-service)
+- [Testing](#testing)
+- [Versioning](#versioning)
+- [About the author](#about-the-autor)
 
-### Overview
+---
+
+## Overview
+
+This technical test is a Spring Boot microservice built with **Java 21 and Spring Boot** that provides an API for
+querying product prices based on brand, product, and effective date. It follows a **hexagonal architecture** with
+clearly separated layers for domain, application, and infrastructure
+via a REST API.
+
+* **Stack:** Java 21, Spring Boot 3.5.9, H2 database, Maven, MapStruct, Jakarta Validation, JUnit 5, Mockito, SpringDoc
+* **Architecture:** Hexagonal, SOLID principles and DDD.
+* **Documentation:** Swagger UI (SpringDoc OpenAPI).
+
+---
+
+## Architecture
+
+- **Domain Layer:** Contains business entities and inbound/outbound port interfaces.
+    * Outbound port - `PricePersistencePort`: Data persistence for querying the database.
+- **Application Layer:** Implements use cases and DTOs.
+    * `GetPriceUseCase`: Use case for query product prices.
+- **Infrastructure Layer:**
+    * Handles persistence (`PriceJPARepository` with ``H2`` database), 
+    * REST adapter (`PriceController`), 
+    * and DTO mappings.
+
+**Simplified diagram:**
+
+```
+Client --> Controller --> Use Cases --> Domain Entities --> Repository/DB
+```
+
+---
+
+## Features
 
 This service implements a very simple pricing logic:
 
-- Accepts productId,  brandId and searchDate as inputs.
-
+- Retrieve the active price for a product by brand and date.
+- Accepts `brandId`, `productId`, and `searchDate` as inputs.
 - Returns the applicable price, start/end dates, currency, and final price.
-
 - Selects the price with highest priority if multiple rates apply.
+- Unit and integration tests.
+- Input validation for all REST endpoints.
+- DTOs and mapping with MapStruct.
 
-- Swagger UI is available for exploring the API: http://localhost:8080/swagger-ui.html
+---
 
-  - Access the API:``GET http://localhost:8080/api/price?searchDate=2020-06-14T16:00:00Z&productId=35455&brandId=1``
+## Configuration
 
+All configurations are in `application.properties`.
 
-## Requirements
+---
 
-* JDK 21
-* Maven
+## Database Schema
 
-## Running the Service
+The service uses `H2` in-memory database, with table `price` to store product prices. The schema is defined as follows:
 
-- Clone the repository:
+```sql
+CREATE TABLE price
+(
+    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+    brand_id        BIGINT         NOT NULL,
+    product_id      BIGINT         NOT NULL,
+    applicable_rate BIGINT         NOT NULL,
+    priority        INT            NOT NULL,
+    start_date      TIMESTAMP      NOT NULL,
+    end_date        TIMESTAMP      NOT NULL,
+    price           DECIMAL(10, 2) NOT NULL,
+    curr            VARCHAR(3)     NOT NULL
+);
 
- ```shell
-git clone git@github.com:jvjimenez/pricing-service.git
+CREATE INDEX idx_brand_product_dates_priority
+    ON price (brand_id, product_id, start_date, end_date, priority DESC);
+```
+
+This index optimizes queries by brand, product, date range, and priority.
+
+---
+
+## API Documentation
+
+Swagger UI is available for exploring the API here: http://localhost:8080/swagger-ui.html
+
+| Endpoint     | Method | Description                                                   |
+|--------------|--------|---------------------------------------------------------------|
+| `/api/price` | GET    | Returns the price for a given brand, product, and search date |
+
+**Query Parameters:**
+
+- `brandId` (Long, required)
+- `productId` (Long, required)
+- `searchDate` (ISO 8601, required)
+
+**Response Example:**
+
+```json
+{
+  "brandId": 35455,
+  "productId": 1,
+  "applicableRate": 1,
+  "price": 25.45,
+  "currency": "EUR",
+  "startDate": "2020-06-14T15:00:00Z",
+  "endDate": "2020-06-14T18:30:00Z"
+}
+```
+
+---
+## Getting Started
+
+### Prerequisites
+
+- Java 21
+- Maven
+
+### Installation
+
+```bash
+git clone https://github.com/jvvjimenez/pricing-service.git
 cd pricing-service
-```
- 
-- Build and run:
-
-
-```shell
-mvn clean spring-boot:run
+mvn clean install
 ```
 
+### Running the Service
+
+#### Using Maven:
+
+```bash
+mvn spring-boot:run
+```
+
+---
 ## Testing
 
-Tests cover examples of domain logic, controller and dto mappings.
+Tests cover examples for Unit Tests, integration Test and DTO mappings Tests.
 
 - Run all tests:
+
 ```shell
 mvn clean verify
 ```
-## Versioning 
 
-Included example workflow that build, test and tag a new version when a PR is merged into main.
+### Coverage
 
-## Notes
+- Use IntelliJ "Run with Coverage".
 
-- As required, the service uses H2 in-memory for tests and initial data is loaded via data.sql.
-- All domain and API models use BigDecimal for prices and Instant (UTC) for dates to ensure precision.
-- Regarding the database table
-  - Added column *cur* for currency.
-  - The name of the *price_list* column has been renamed to *applicable_rate* to make it more descriptive.
+## Versioning
+
+This repository uses automatic semantic versioning. Every time a pull request is merged into ``main``, a GitHub Actions
+workflow automatically increments the version number following the ``MAJOR.MINOR.PATCH`` scheme.
+
+* **MAJOR**: breaking changes
+
+* **MINOR**: new features, backwards compatible
+
+* **PATCH**: bug fixes
+
+---
+
+## About the autor
+
+**Project Maintainer:** Juan Vicente Jiménez
+
+**GitHub:** [https://github.com/jvjimenez/pricing-service](https://github.com/jvjimenez/pricing-service)
 
