@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
@@ -47,7 +46,7 @@ class PriceControllerTest {
                 "EUR"
         );
 
-        when(service.getPrice(any())).thenReturn(Optional.of(summary));
+        when(service.getPrice(any())).thenReturn(summary);
         when(mapper.toDto(summary)).thenReturn(new PriceResponseDto(
                 1L, 35455L, 2L, new java.math.BigDecimal("25.45"), "EUR",
                 Instant.parse("2020-06-14T15:00:00Z"),

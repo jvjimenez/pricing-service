@@ -37,7 +37,7 @@ class PriceControllerGetPriceItTest extends BaseItTest {
     @ParameterizedTest
     @MethodSource("shouldReturn200GetPrice")
     void shouldReturn200GetPrice(String date, BigDecimal expectedPrice) {
-        String url = url("/api/price?searchDate=" + date +
+        String url = url("/api/v1/prices?searchDate=" + date +
                 "&productId=" + PRODUCT_ID + "&brandId=" + BRAND_ID);
         ResponseEntity<PriceResponseDto> response = restTemplate.getForEntity(url, PriceResponseDto.class);
 
@@ -48,7 +48,7 @@ class PriceControllerGetPriceItTest extends BaseItTest {
 
     @Test
     void shouldReturn404GetPricePriceNotFound() {
-        String url = url("/api/price?searchDate=2020-01-01T00:00:00Z" +
+        String url = url("/api/v1/prices?searchDate=2020-01-01T00:00:00Z" +
                 "&productId=99999&brandId=1");
         ResponseEntity<PriceResponseDto> response = restTemplate.getForEntity(url, PriceResponseDto.class);
 
@@ -58,7 +58,7 @@ class PriceControllerGetPriceItTest extends BaseItTest {
 
     @Test
     void shouldReturn400GetPriceInvalidDate() {
-        String url = url("/api/price?searchDate=invalid-date" +
+        String url = url("/api/v1/prices?searchDate=invalid-date" +
                 "&productId=" + PRODUCT_ID + "&brandId=" + BRAND_ID);
         ResponseEntity<PriceResponseDto> response = restTemplate.getForEntity(url, PriceResponseDto.class);
 
@@ -68,7 +68,7 @@ class PriceControllerGetPriceItTest extends BaseItTest {
 
     @Test
     void shouldReturn400GetPriceNoMandatoryParams() {
-        String url = url("/api/price?searchDate=2020-01-01T00:00:00Z");
+        String url = url("/api/v1/prices?searchDate=2020-01-01T00:00:00Z");
         ResponseEntity<PriceResponseDto> response = restTemplate.getForEntity(url, PriceResponseDto.class);
 
         assertThat(response.getStatusCode().is4xxClientError()).isTrue();
