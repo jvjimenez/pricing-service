@@ -161,7 +161,17 @@ mvn clean verify
 
 ### Coverage
 
-- Use IntelliJ "Run with Coverage".
+- Use IntelliJ "Run with Coverage". **100% coverage achieved.**
+
+---
+
+## Potential Improvements
+
+The following improvements are not included to keep the current service intentionally simple.
+
+- **Domain model**: convert `Price` from a record to a class with behavior and invariants.
+- **Add request caching**: if the use case is read‑heavy and prices don’t change per request.
+- **REST error format**: adopt `application/problem+json` (RFC 7807) for consistent error responses and cover with error response body tests.
 
 ## Versioning
 
@@ -181,4 +191,3 @@ workflow automatically increments the version number following the ``MAJOR.MINOR
 **Project Maintainer:** Juan Vicente Jiménez
 
 **GitHub:** [https://github.com/jvjimenez/pricing-service](https://github.com/jvjimenez/pricing-service)
-
