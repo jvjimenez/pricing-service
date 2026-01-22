@@ -30,6 +30,7 @@ class PriceResponseDtoMapperTest {
         assertThat(response).isNotNull();
         assertThat(response.brandId()).isEqualTo(1L);
         assertThat(response.productId()).isEqualTo(35455L);
+        assertThat(response.applicableRate()).isEqualTo(1L);
         assertThat(response.startDate()).isEqualTo(Instant.parse("2020-06-14T00:00:00Z"));
         assertThat(response.endDate()).isEqualTo(Instant.parse("2020-06-14T23:59:59Z"));
         assertThat(response.price()).isEqualByComparingTo(new BigDecimal("35.50"));

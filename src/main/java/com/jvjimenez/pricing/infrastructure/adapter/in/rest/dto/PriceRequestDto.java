@@ -8,8 +8,8 @@ import java.time.Instant;
 
 @ParameterObject
 public record PriceRequestDto(
-        @NotNull Long brandId,
-        @NotNull Long productId,
-        @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant searchDate
+        @NotNull(message = "brandId is required") Long brandId,
+        @NotNull(message = "productId is required") Long productId,
+        @NotNull(message = "searchDate is required") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant searchDate
 ) {
 }

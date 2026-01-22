@@ -13,4 +13,8 @@ public record Price(
         BigDecimal price,
         String currency
 ) {
+    public boolean isApplicableOn(Instant date) {
+        return (date.equals(startDate) || date.isAfter(startDate))
+                && (date.equals(endDate) || date.isBefore(endDate));
+    }
 }

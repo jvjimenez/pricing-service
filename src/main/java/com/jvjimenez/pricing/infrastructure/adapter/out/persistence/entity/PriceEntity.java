@@ -12,25 +12,25 @@ public class PriceEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "product_id", nullable = false)
     private Long productId;
 
-    @Column(nullable = false)
+    @Column(name = "brand_id", nullable = false)
     private Long brandId;
 
-    @Column(nullable = false)
+    @Column(name = "applicable_rate", nullable = false)
     private Long applicableRate;
 
     @Column(nullable = false)
     private Integer priority;
 
-    @Column(nullable = false)
+    @Column(name = "start_date", nullable = false)
     private Instant startDate;
 
-    @Column(nullable = false)
+    @Column(name = "end_date", nullable = false)
     private Instant endDate;
 
-    @Column(nullable = false)
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
 
     @Column(name = "curr", nullable = false)

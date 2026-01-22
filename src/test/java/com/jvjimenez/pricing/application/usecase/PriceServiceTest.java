@@ -2,6 +2,7 @@ package com.jvjimenez.pricing.application.usecase;
 
 import com.jvjimenez.pricing.application.query.SearchPriceQuery;
 import com.jvjimenez.pricing.application.view.PriceSummary;
+import com.jvjimenez.pricing.application.exception.PriceNotFoundException;
 import com.jvjimenez.pricing.domain.model.Price;
 import com.jvjimenez.pricing.domain.port.out.PricePersistencePort;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,7 @@ import java.time.Instant;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class PriceServiceTest {
@@ -29,10 +31,13 @@ class PriceServiceTest {
     void shouldReturnEmptyWhenNoPricesFound() {
         when(repository.findByBrandAndProductAndDate(anyLong(), anyLong(), any()))
                 .thenReturn(Optional.empty());
+        SearchPriceQuery query = new SearchPriceQuery(1L, 1L, Instant.now());
 
-        Optional<PriceSummary> result = service.getPrice(new SearchPriceQuery(1L, 1L, Instant.now()));
+        assertThrows(PriceNotFoundException.class, () -> service.getPrice(query)
 
-        assertThat(result).isEmpty();
+        );
+        verify(repository, times(1))
+                .findByBrandAndProductAndDate(query.brandId(), query.productId(), query.searchDate());
     }
 
     @Test
@@ -43,9 +48,11 @@ class PriceServiceTest {
 
         when(repository.findByBrandAndProductAndDate(1L, 35455L, now)).thenReturn(Optional.of(p1));
 
-        Optional<PriceSummary> result = service.getPrice(new SearchPriceQuery(1L, 35455L, now));
+        PriceSummary result = service.getPrice(new SearchPriceQuery(1L, 35455L, now));
 
-        assertThat(result).isPresent();
-        assertThat(result.get().price()).isEqualByComparingTo(new BigDecimal("25.45"));
+        assertThat(result.price()).isEqualByComparingTo(new BigDecimal("25.45"));
+        assertThat(result.applicableRate()).isEqualTo(1L);
+        assertThat(result.currency()).isEqualTo("EUR");
+        verify(repository, times(1)).findByBrandAndProductAndDate(1L, 35455L, now);
     }
 }
