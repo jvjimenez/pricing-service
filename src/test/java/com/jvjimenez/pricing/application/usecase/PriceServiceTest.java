@@ -2,7 +2,7 @@ package com.jvjimenez.pricing.application.usecase;
 
 import com.jvjimenez.pricing.application.query.SearchPriceQuery;
 import com.jvjimenez.pricing.application.view.PriceSummary;
-import com.jvjimenez.pricing.domain.exception.PriceNotFoundException;
+import com.jvjimenez.pricing.application.exception.PriceNotFoundException;
 import com.jvjimenez.pricing.domain.model.Price;
 import com.jvjimenez.pricing.domain.port.out.PricePersistencePort;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +36,8 @@ class PriceServiceTest {
         assertThrows(PriceNotFoundException.class, () -> service.getPrice(query)
 
         );
+        verify(repository, times(1))
+                .findByBrandAndProductAndDate(query.brandId(), query.productId(), query.searchDate());
     }
 
     @Test
@@ -49,5 +51,8 @@ class PriceServiceTest {
         PriceSummary result = service.getPrice(new SearchPriceQuery(1L, 35455L, now));
 
         assertThat(result.price()).isEqualByComparingTo(new BigDecimal("25.45"));
+        assertThat(result.applicableRate()).isEqualTo(1L);
+        assertThat(result.currency()).isEqualTo("EUR");
+        verify(repository, times(1)).findByBrandAndProductAndDate(1L, 35455L, now);
     }
 }
