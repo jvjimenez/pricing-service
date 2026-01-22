@@ -14,6 +14,7 @@
   - [Running the Service](#running-the-service)
 - [Testing](#testing)
 - [Versioning](#versioning)
+- [Potential Improvements](#Potential-Improvements)
 - [About the author](#about-the-autor)
 
 ---
@@ -100,9 +101,9 @@ This index optimizes queries by brand, product, date range, and priority.
 
 Swagger UI is available for exploring the API here: http://localhost:8080/swagger-ui.html
 
-| Endpoint     | Method | Description                                                   |
-|--------------|--------|---------------------------------------------------------------|
-| `/api/price` | GET    | Returns the price for a given brand, product, and search date |
+| Endpoint         | Method | Description                                                   |
+|------------------|--------|---------------------------------------------------------------|
+| `/api/v1/prices` | GET    | Returns the price for a given brand, product, and search date |
 
 **Query Parameters:**
 
@@ -165,14 +166,6 @@ mvn clean verify
 
 ---
 
-## Potential Improvements
-
-The following improvements are not included to keep the current service intentionally simple.
-
-- **Domain model**: convert `Price` from a record to a class with behavior and invariants.
-- **Add request caching**: if the use case is read‑heavy and prices don’t change per request.
-- **REST error format**: adopt `application/problem+json` (RFC 7807) for consistent error responses and cover with error response body tests.
-
 ## Versioning
 
 This repository uses automatic semantic versioning. Every time a pull request is merged into ``main``, a GitHub Actions
@@ -183,6 +176,17 @@ workflow automatically increments the version number following the ``MAJOR.MINOR
 * **MINOR**: new features, backwards compatible
 
 * **PATCH**: bug fixes
+
+---
+
+## Potential Improvements
+
+The following improvements are not included to keep the current service intentionally simple.
+
+- **Domain model**: convert `Price` from a record to a class with behavior and invariants.
+- **Add request caching**: if the use case is read‑heavy and prices don’t change per request.
+- **REST endpoint shape**: include `brandId` and `productId` in the path (for example, `/api/v1/brands/{brandId}/products/{productId}/prices`).
+- **REST error format**: adopt `application/problem+json` (RFC 7807) for consistent error responses and cover with error response body tests.
 
 ---
 
