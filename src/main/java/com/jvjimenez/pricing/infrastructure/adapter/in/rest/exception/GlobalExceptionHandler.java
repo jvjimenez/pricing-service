@@ -1,6 +1,6 @@
 package com.jvjimenez.pricing.infrastructure.adapter.in.rest.exception;
 
-import com.jvjimenez.pricing.domain.exception.PriceNotFoundException;
+import com.jvjimenez.pricing.application.exception.PriceNotFoundException;
 import com.jvjimenez.pricing.infrastructure.adapter.in.rest.dto.ErrorResponseDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
