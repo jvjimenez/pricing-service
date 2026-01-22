@@ -2,7 +2,7 @@ package com.jvjimenez.pricing.application.usecase;
 
 import com.jvjimenez.pricing.application.query.SearchPriceQuery;
 import com.jvjimenez.pricing.application.view.PriceSummary;
-import com.jvjimenez.pricing.domain.exception.PriceNotFoundException;
+import com.jvjimenez.pricing.application.exception.PriceNotFoundException;
 import com.jvjimenez.pricing.domain.model.Price;
 import com.jvjimenez.pricing.domain.port.out.PricePersistencePort;
 import org.slf4j.Logger;
@@ -19,12 +19,12 @@ public class GetPriceUseCaseImpl implements GetPriceUseCase {
     }
 
     public PriceSummary getPrice(SearchPriceQuery query) {
-        log.debug("Getting price for brandId={}, productId={}, searchDate={}", query.brand(), query.productId(), query.searchDate());
+        log.debug("Getting price for brandId={}, productId={}, searchDate={}", query.brandId(), query.productId(), query.searchDate());
 
         var price = pricePersistentService
-                .findByBrandAndProductAndDate(query.brand(), query.productId(), query.searchDate())
+                .findByBrandAndProductAndDate(query.brandId(), query.productId(), query.searchDate())
                 .orElseThrow(() -> new PriceNotFoundException(
-                        "Price not found for brandId=" + query.brand() +
+                        "Price not found for brandId=" + query.brandId() +
                                 ", productId=" + query.productId() +
                                 ", searchDate=" + query.searchDate()
                 ));
@@ -32,7 +32,7 @@ public class GetPriceUseCaseImpl implements GetPriceUseCase {
         var result = toPriceResult(price);
 
         log.debug("Price found for brandId={}, productId={}, searchDate={}",
-                query.brand(), query.productId(), query.searchDate());
+                query.brandId(), query.productId(), query.searchDate());
 
         return result;
 
