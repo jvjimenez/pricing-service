@@ -1,4 +1,4 @@
-package com.jvjimenez.pricing.domain.exception;
+package com.jvjimenez.pricing.application.exception;
 
 public class PriceNotFoundException extends RuntimeException {
 
